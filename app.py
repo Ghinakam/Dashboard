@@ -1,4 +1,38 @@
 import streamlit as st
+def check_password():
+    """Returns True if the user entered the correct password."""
+
+    def password_entered():
+        if st.session_state["password"] == st.secrets["PASSWORD"]:
+            st.session_state["password_correct"] = True
+            del st.session_state["password"]
+        else:
+            st.session_state["password_correct"] = False
+
+    if st.session_state.get("password_correct", False):
+        return True
+
+    st.title("🔒 Sleep Health Analytics Dashboard")
+
+    st.markdown(
+        "Please enter the password to access the dashboard."
+    )
+
+    st.text_input(
+        "Password",
+        type="password",
+        on_change=password_entered,
+        key="password",
+    )
+
+    if "password_correct" in st.session_state:
+        st.error("❌ Incorrect password")
+
+    return False
+
+
+if not check_password():
+    st.stop()
 import pandas as pd
 import plotly.express as px
 
